@@ -16,7 +16,6 @@ int file_found = 0;
 char** listDirectories(const char* baseDirectory, int* numDirectories) {
     DIR* dir = opendir(baseDirectory);
     if (!dir) {
-        // perror("opendir");
         *numDirectories = 0;
         return NULL;
     }
@@ -69,8 +68,6 @@ void* searchFile(void* args) {
         return (void*)NULL;
     }
 
-    // printf("Thread [%lu] searching in %s\n", pthread_self(), directory);
-
     struct dirent* entry;
     while ((entry = readdir(dir)) != NULL) {
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
@@ -78,8 +75,6 @@ void* searchFile(void* args) {
 
         char fullpath[FULL_PATH_MAX_LENGTH];
         snprintf(fullpath, sizeof(fullpath), "%s/%s", directory, entry->d_name);
-
-        // printf("Thread [%lu] checking %s\n", pthread_self(), fullpath);
 
         struct stat st;
         if (stat(fullpath, &st) == -1) {
@@ -103,6 +98,5 @@ void* searchFile(void* args) {
     }
 
     closedir(dir);
-    // printf("Thread [%lu] finnished searching in %s\n", pthread_self(), directory);
     return (void*)NULL;
 }
